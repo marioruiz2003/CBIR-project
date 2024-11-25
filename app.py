@@ -11,6 +11,7 @@ import time
 import streamlit as st
 from streamlit_cropper import st_cropper
 
+from functions import create_color_histogram, create_embedding
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -33,14 +34,12 @@ def get_image_list():
     return image_list
 
 def retrieve_image(img_query, feature_extractor, n_imgs=11):
-    if (feature_extractor == 'Extractor 1'):
-        # TODO: select the database according to the feature extractor
-        # Function to preprocess and extract features
-        model_feature_extractor = ...
-        indexer = faiss.read_index(os.path.join(DB_PATH,  'feat_extract_1.index'))
-    elif (feature_extractor == 'Extractor 2'):
-        model_feature_extractor = ...
-        indexer = faiss.read_index(os.path.join(DB_PATH,  'feat_extract_2.index'))
+    if (feature_extractor == 'Color Histograms'):
+        model_feature_extractor = create_color_histogram
+        indexer = faiss.read_index(os.path.join(DB_PATH,  "color_histograms.index"))
+    elif (feature_extractor == 'Transformer Embeddings'):
+        model_feature_extractor = create_embedding
+        indexer = faiss.read_index(os.path.join(DB_PATH,  'embeddings.index'))
 
     # TODO: Modify accordingly
     embeddings = model_feature_extractor(img_query)
@@ -61,10 +60,10 @@ def main():
 
         st.subheader('Choose feature extractor')
         # TODO: Adapt to the type of feature extraction methods used.
-        option = st.selectbox('.', ('Extractor 1', 'Extractor 2'))
+        option = st.selectbox('Select one of the methods:', ('Color Histograms', 'Transformer Embeddings'))
 
         st.subheader('Upload image')
-        img_file = st.file_uploader(label='.', type=['png', 'jpg'])
+        img_file = st.file_uploader(label='Choose the image you want', type=['png', 'jpg'])
 
         if img_file:
             img = Image.open(img_file)
