@@ -11,7 +11,7 @@ import time
 import streamlit as st
 from streamlit_cropper import st_cropper
 
-from functions import create_color_histogram, create_embedding
+from functions import create_color_histogram, create_embedding, get_glcm_features
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -37,9 +37,13 @@ def retrieve_image(img_query, feature_extractor, n_imgs=11):
     if (feature_extractor == 'Color Histograms'):
         model_feature_extractor = create_color_histogram
         indexer = faiss.read_index(os.path.join(DB_PATH,  "color_histograms.index"))
+    elif (feature_extractor == 'GLCM Features'):
+        model_feature_extractor = get_glcm_features
+        indexer = faiss.read_index(os.path.join(DB_PATH,  'texture_histograms.index'))
     elif (feature_extractor == 'Transformer Embeddings'):
         model_feature_extractor = create_embedding
         indexer = faiss.read_index(os.path.join(DB_PATH,  'embeddings.index'))
+
 
     # TODO: Modify accordingly
     embeddings = model_feature_extractor(img_query)
@@ -60,7 +64,9 @@ def main():
 
         st.subheader('Choose feature extractor')
         # TODO: Adapt to the type of feature extraction methods used.
-        option = st.selectbox('Select one of the methods:', ('Color Histograms', 'Transformer Embeddings'))
+        option = st.selectbox('Select one of the methods:', ('Color Histograms', 
+                                                             'Transformer Embeddings',
+                                                             'GLCM Features'))
 
         st.subheader('Upload image')
         img_file = st.file_uploader(label='Choose the image you want', type=['png', 'jpg'])

@@ -1,11 +1,10 @@
-from transformers import ViTImageProcessor, ViTModel
-from PIL import Image
-import torch
 import pandas as pd
 import numpy as np
-import faiss
-import os
 import cv2
+
+from transformers import ViTImageProcessor, ViTModel
+import torch
+from skimage.feature import graycomatrix, graycoprops
 
 def create_color_histogram(img, bins=8):
     # PIL Image object to OpenCV image
@@ -45,3 +44,22 @@ def create_embedding(img):
         return embedding
     
     return get_image_embedding(img)
+
+def get_glcm_features(img, distances = [1, 3, 5, 7], angles = [0, np.pi/4, np.pi/2, 3*np.pi/4]):
+    img = np.array(img)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Calcular la GLCM
+    glcm = graycomatrix(img, distances=distances, angles=angles, levels=256, symmetric=True, normed=True)
+   
+    # Extraer características: contraste, correlación, energía y homogeneidad
+    contrast = graycoprops(glcm, 'contrast').flatten()
+    correlation = graycoprops(glcm, 'correlation').flatten()
+    energy = graycoprops(glcm, 'energy').flatten()
+    homogeneity = graycoprops(glcm, 'homogeneity').flatten()
+    asm = graycoprops(glcm, 'ASM').flatten()
+    dissimilarity = graycoprops(glcm, 'dissimilarity').flatten()
+   
+    # Combinar todas las características en un solo vector
+    features = np.hstack([contrast, correlation, energy, homogeneity, asm, dissimilarity])
+    return np.array([features], dtype=np.float32)
