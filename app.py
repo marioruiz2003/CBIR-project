@@ -64,9 +64,10 @@ def main():
 
         st.subheader('Choose feature extractor')
         # TODO: Adapt to the type of feature extraction methods used.
-        option = st.selectbox('Select one of the methods:', ('Color Histograms', 
+        option = st.selectbox('Select one of the methods:', ('Color Histograms',
+                                                             'GLCM Features',         
                                                              'Transformer Embeddings',
-                                                             'GLCM Features'))
+                                                             ))
 
         st.subheader('Upload image')
         img_file = st.file_uploader(label='Choose the image you want', type=['png', 'jpg'])
