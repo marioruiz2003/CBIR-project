@@ -11,7 +11,7 @@ import time
 import streamlit as st
 from streamlit_cropper import st_cropper
 
-from functions import create_color_histogram, create_embedding, get_glcm_features
+from functions import create_color_histogram, create_embedding, get_glcm_features, extract_hog_features, extract_cnn_features
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -40,6 +40,12 @@ def retrieve_image(img_query, feature_extractor, n_imgs=11):
     elif (feature_extractor == 'GLCM Features'):
         model_feature_extractor = get_glcm_features
         indexer = faiss.read_index(os.path.join(DB_PATH,  'texture_histograms.index'))
+    elif (feature_extractor == 'HOG Features'):
+        model_feature_extractor = extract_hog_features
+        indexer = faiss.read_index(os.path.join(DB_PATH,  'hog.index'))
+    elif (feature_extractor == 'CNN Features'):
+        model_feature_extractor = extract_cnn_features
+        indexer = faiss.read_index(os.path.join(DB_PATH,  'cnn.index'))
     elif (feature_extractor == 'Transformer Embeddings'):
         model_feature_extractor = create_embedding
         indexer = faiss.read_index(os.path.join(DB_PATH,  'embeddings.index'))
@@ -65,12 +71,14 @@ def main():
         st.subheader('Choose feature extractor')
         # TODO: Adapt to the type of feature extraction methods used.
         option = st.selectbox('Select one of the methods:', ('Color Histograms',
-                                                             'GLCM Features',         
+                                                             'GLCM Features',
+                                                             'HOG Features',        
+                                                             'CNN Features', 
                                                              'Transformer Embeddings',
                                                              ))
 
         st.subheader('Upload image')
-        img_file = st.file_uploader(label='Choose the image you want', type=['png', 'jpg'])
+        img_file = st.file_uploader(label='Choose the image you want:', type=['png', 'jpg'])
 
         if img_file:
             img = Image.open(img_file)
