@@ -95,7 +95,7 @@ def extract_cnn_features(img):
     embedding = cnn_model.predict(image)
     return np.array([embedding.flatten()], dtype=np.float32)
 
-def create_embedding(img):
+def create_vit_embedding(img):
     img = np.array(img)
     
     # Función para cargar y preparar la imagen
@@ -111,4 +111,4 @@ def create_embedding(img):
         embedding = outputs.last_hidden_state[:, 0, :]  # Usamos el embedding de la clase [CLS]
         return embedding
     
-    return get_image_embedding(img)
+    return np.array([get_image_embedding(img)], dtype=np.float32)

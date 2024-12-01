@@ -11,7 +11,7 @@ import time
 import streamlit as st
 from streamlit_cropper import st_cropper
 
-from functions import create_color_histogram, create_embedding, get_glcm_features, extract_hog_features, extract_cnn_features
+from functions import create_color_histogram, create_vit_embedding, get_glcm_features, extract_hog_features, extract_cnn_features
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -46,9 +46,9 @@ def retrieve_image(img_query, feature_extractor, n_imgs=11):
     elif (feature_extractor == 'CNN Features'):
         model_feature_extractor = extract_cnn_features
         indexer = faiss.read_index(os.path.join(DB_PATH,  'cnn.index'))
-    elif (feature_extractor == 'Transformer Embeddings'):
-        model_feature_extractor = create_embedding
-        indexer = faiss.read_index(os.path.join(DB_PATH,  'embeddings.index'))
+    elif (feature_extractor == 'Vision Transformer'):
+        model_feature_extractor = create_vit_embedding
+        indexer = faiss.read_index(os.path.join(DB_PATH,  'vit.index'))
 
 
     # TODO: Modify accordingly
@@ -74,7 +74,7 @@ def main():
                                                              'GLCM Features',
                                                              'HOG Features',        
                                                              'CNN Features', 
-                                                             'Transformer Embeddings',
+                                                             'Vision Transformer',
                                                              ))
 
         st.subheader('Upload image')
