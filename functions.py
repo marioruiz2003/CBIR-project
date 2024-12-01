@@ -54,24 +54,6 @@ def create_color_histogram(img, bins=8):
 
     return np.array([new_vector], dtype=np.float32)
 
-def create_embedding(img):
-    img = np.array(img)
-    
-    # Función para cargar y preparar la imagen
-    def preprocess_image(image):
-        inputs = pretrained_vit_feature_extractor(images=image, return_tensors="pt")
-        return inputs
-
-    # Genera el embedding de la imagen
-    def get_image_embedding(image_path):
-        inputs = preprocess_image(image_path)
-        with torch.no_grad():
-            outputs = pretrained_vit_model(**inputs)
-        embedding = outputs.last_hidden_state[:, 0, :]  # Usamos el embedding de la clase [CLS]
-        return embedding
-    
-    return get_image_embedding(img)
-
 def get_glcm_features(img, distances = [1, 3, 5, 7], angles = [0, np.pi/4, np.pi/2, 3*np.pi/4]):
     img = np.array(img)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -112,3 +94,21 @@ def extract_cnn_features(img):
     image = np.expand_dims(image, axis=0)
     embedding = cnn_model.predict(image)
     return np.array([embedding.flatten()], dtype=np.float32)
+
+def create_embedding(img):
+    img = np.array(img)
+    
+    # Función para cargar y preparar la imagen
+    def preprocess_image(image):
+        inputs = pretrained_vit_feature_extractor(images=image, return_tensors="pt")
+        return inputs
+
+    # Genera el embedding de la imagen
+    def get_image_embedding(image_path):
+        inputs = preprocess_image(image_path)
+        with torch.no_grad():
+            outputs = pretrained_vit_model(**inputs)
+        embedding = outputs.last_hidden_state[:, 0, :]  # Usamos el embedding de la clase [CLS]
+        return embedding
+    
+    return get_image_embedding(img)
