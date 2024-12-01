@@ -97,4 +97,4 @@ def create_vit_embedding(img):
         embedding = outputs.last_hidden_state[:, 0, :]  # Usamos el embedding de la clase [CLS]
         return embedding
     
-    return np.array([get_image_embedding(img)], dtype=np.float32)
+    return get_image_embedding(img)
