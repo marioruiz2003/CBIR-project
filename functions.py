@@ -6,6 +6,7 @@ from transformers import ViTImageProcessor, ViTModel
 import torch
 from skimage.feature import graycomatrix, graycoprops, hog
 
+import tensorflow as tf
 from tensorflow.keras.applications import ResNet50, VGG16
 from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
@@ -24,6 +25,10 @@ thread = threading.Thread(target=load_models)
 thread.start()
 
 """CNN MODEL"""
+# Añadimos semillas para reproducibilidad
+np.random.seed(42)  # Semilla para operaciones de NumPy
+tf.random.set_seed(42)  # Semilla para operaciones de TensorFlow
+
 # Cargar la ResNet50 preentrenada sin la capa final
 base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
@@ -31,11 +36,13 @@ base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224,
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
 x = Dense(1024, activation='relu')(x)
-x = Dropout(0.5)(x)
+# x = Dropout(0.5)(x)
 embeddings = Dense(1024, activation='softmax')(x)
 
 # Crear el modelo final
 cnn_model = Model(inputs=base_model.input, outputs=embeddings)
+
+cnn_model = tf.keras.models.load_model('fine_tuned_model.h5')
 
 
 def create_color_histogram(img, bins=8):
@@ -88,7 +95,6 @@ def extract_hog_features(img):
 
 def extract_cnn_features(img):
     image = np.array(img)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = image / 255.0
     image = cv2.resize(image, (224, 224))
     image = np.expand_dims(image, axis=0)
