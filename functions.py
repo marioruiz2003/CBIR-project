@@ -13,6 +13,7 @@ pretrained_vit_feature_extractor = ViTImageProcessor.from_pretrained("google/vit
 pretrained_vit_model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
 
 """CNN MODEL"""
+# i have a model saved in the parent directory
 cnn_model = tf.keras.models.load_model('fine_tuned_model.h5')
 
 
