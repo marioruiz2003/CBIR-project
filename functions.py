@@ -9,17 +9,8 @@ from skimage.feature import graycomatrix, graycoprops, hog
 import tensorflow as tf
 
 """EMBEDDING MODEL"""
-pretrained_vit_feature_extractor = None
-pretrained_vit_model = None
-
-def load_models():
-    global pretrained_vit_feature_extractor, pretrained_vit_model
-    pretrained_vit_feature_extractor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224-in21k")
-    pretrained_vit_model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
-
-# Cargar los modelos en un hilo separado
-thread = threading.Thread(target=load_models)
-thread.start()
+pretrained_vit_feature_extractor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224-in21k")
+pretrained_vit_model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
 
 """CNN MODEL"""
 cnn_model = tf.keras.models.load_model('fine_tuned_model.h5')
@@ -97,4 +88,4 @@ def create_vit_embedding(img):
         embedding = outputs.last_hidden_state[:, 0, :]  # Usamos el embedding de la clase [CLS]
         return embedding
     
-    return get_image_embedding(img)
+    return np.array([get_image_embedding(img)], dtype=np.float32).reshape(1, 768)
