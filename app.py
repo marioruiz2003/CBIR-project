@@ -11,7 +11,7 @@ import time
 import streamlit as st
 from streamlit_cropper import st_cropper
 
-from functions import create_color_histogram, create_vit_embedding, get_glcm_features, extract_hog_features, extract_cnn_features
+from utils.functions import create_color_histogram, create_vit_embedding, get_glcm_features, extract_hog_features, extract_cnn_features
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -25,7 +25,8 @@ FILES_PATH = str(pathlib.Path().resolve())
 IMAGES_PATH = os.path.join(FILES_PATH, 'images')
 # Path in which the database should be located
 DB_PATH = os.path.join(FILES_PATH, 'database')
-
+print(DB_PATH)
+print(os.path.join(DB_PATH, 'color_histograms.index'))
 DB_FILE = 'db.csv' # name of the database INDICE - PATH
 
 def get_image_list():
