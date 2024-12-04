@@ -25,8 +25,7 @@ FILES_PATH = str(pathlib.Path().resolve())
 IMAGES_PATH = os.path.join(FILES_PATH, 'images')
 # Path in which the database should be located
 DB_PATH = os.path.join(FILES_PATH, 'database')
-print(DB_PATH)
-print(os.path.join(DB_PATH, 'color_histograms.index'))
+
 DB_FILE = 'db.csv' # name of the database INDICE - PATH
 
 def get_image_list():
