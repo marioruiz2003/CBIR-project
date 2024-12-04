@@ -1,4 +1,17 @@
 # CBIR
+El objetivo principal de este proyecto es implementar un
+sistema CBIR aplicado a paisajes, empleando un conjunto
+de datos que incluye cinco clases visuales: glaciares, costa,
+desierto, montaña y bosque. Para ello, se utilizan diferentes
+métodos de extracción de características, desde técnicas
+tradicionales como histogramas de color, GLCM y HOG,
+hasta técnicas avanzadas basadas en aprendizaje profundo,
+como embeddings de CNN y transformers. El desempeño de
+cada método será evaluado, lo que permitiría comparar su
+eficacia en términos de precisión y recuperación. A través
+de este análisis, se busca identificar el enfoque más efectivo
+para la tarea de recuperación de imágenes, contribuyendo al
+desarrollo de sistemas CBIR más eficientes y prácticos.
 
 ## Requisitos
 
