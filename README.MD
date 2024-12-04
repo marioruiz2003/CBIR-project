@@ -41,3 +41,6 @@ Para ejecutar la aplicación, usa el siguiente comando:
 streamlit run app.py
 ```
 La aplicación se ejecutará en http://localhost:8501
+
+### Nota importante
+Para ejecutar la aplicación correctamente, es necesario contar con el modelo CNN, que debe estar en el directorio principal. Se puede obtener el modelo descargándolo desde el siguiente enlace de Google Drive: https://drive.google.com/file/d/1h_h_FCyDz-XQuEYm-gRbbEDVLGHJerMN/view?usp=sharing, o bien ejecutar el notebook de creación llamado CNN.ipynb, donde también se puede modificar la red al gusto de cada uno.
